@@ -1,0 +1,447 @@
+from tkinter import *
+from PIL import ImageTk, Image
+from tkinter import messagebox
+import random
+
+
+def onclick(count):
+    StartB = Button(
+        frame1,
+        text="Start",
+        command=destroy1,
+        font=("arial","15","bold"),
+        width=12,
+        background="BLUE",
+        foreground="WHITE"
+    )
+    StartB.place(x=330, y=450)
+    TotalRoundCount.config(text=count)
+
+
+def destroy1():
+    frame1.destroy()
+    frame2.pack(side="top", expand=True, fill="both")
+
+
+def start():
+    foregroundColor1 = "BLUE"
+    # backgroundColor1 = "LIGHTBLUE"
+    RoundNo = 0
+
+    # frame1 = Frame(window, bg=backgroundColor1)
+    frame1.pack(side="top", expand="True", fill="both")
+    Title1 = Label(
+        frame1,
+        text="ROCK - PAPER - SCISSOR",
+        font=("arial", "25", "bold"),
+        bg=backgroundColor1,
+        foreground="#0055ff",
+    )
+
+    SubTitle1 = Label(
+        frame1,
+        text="*   Welcome to Rock-Paper-Scissor Game   *",
+        font=("arial", "18", "bold"),
+        bg=backgroundColor1,
+        foreground="PURPLE",
+    )
+    Instruct = Label(
+        frame1,
+        text="     Choose the no. of Rounds you want to play",
+        font=("arial", "15", "bold"),
+        bg=backgroundColor1,
+        foreground=foregroundColor1,
+    )
+    three = Radiobutton(
+        frame1,
+        text="Three",
+        font=("arial", "14", "bold"),
+        indicatoron=1,
+        bg=backgroundColor1,
+        foreground=foregroundColor1,
+        command=lambda: onclick(3)
+    )
+    five = Radiobutton(
+        frame1,
+        text="Five",
+        font=("arial", "14", "bold"),
+        variable=RoundNo,
+        # value=3,
+        bg=backgroundColor1,
+        foreground=foregroundColor1,
+        takefocus=0,
+        command=lambda: onclick(5)
+    )
+    ten = Radiobutton(
+        frame1,
+        text="Ten",
+        font=("arial", "14", "bold"),
+        variable=RoundNo,
+
+        bg=backgroundColor1,
+        foreground=foregroundColor1,
+        command=lambda: onclick(10)
+    )
+
+    # StartB = Button(
+    #     frame1,
+    #     text="Start",
+    #     command=destroy1,
+    # )
+    Title1.place(x=210, y=10)
+    SubTitle1.place(x=180, y=130)
+    Instruct.place(x=190, y=180)
+    three.place(x=350, y=230)
+    five.place(x=350, y=265)
+    ten.place(x=350, y=300)
+
+
+def reset():
+
+    UScore.config(state="normal", text=0)
+    CScore.config(state="normal", text=0)
+    RoundCount.config(state="normal", text=0)
+    WinnerTitle.config(text="")
+    Winner.config(text="")
+
+
+def FinalWinner(UserScore, CompScore):
+    if UserScore > CompScore:
+        winner = "User"
+        WinnerTitle.config(state="normal", text="The Winner is")
+
+    elif UserScore < CompScore:
+        winner = "Computer"
+        WinnerTitle.config(state="normal", text="The Winner is")
+    else:
+        winner = "Its a Tie"
+    Winner.config(state="normal", text=winner)
+    response = messagebox.askyesno('', "Do you want to play again?")
+    if response:
+        reset()
+    else:
+        frame2.destroy()
+        frame3.pack(side="top", expand=True, fill="both")
+        Thank = Label(
+            frame3,
+            text="Thank You !!! Hope You Enjoyed !!!",
+            font=("monospace", "25", "bold")
+        )
+        Thank.place(x=150, y=300)
+
+
+def showRoundResult(winner):
+    messagebox.showinfo('Round Result', winner)
+
+
+def RoundWinner(UChoice, CChoice):
+    UserScore = UScore.cget("text")
+    CompScore = CScore.cget("text")
+    if UChoice == "Rock" and CChoice == "scissor":
+        showRoundResult("User is Winner")
+        UserScore = UserScore + 1
+    elif UChoice == "Scissor" and CChoice == "paper":
+        showRoundResult("User is Winner")
+        UserScore = UserScore + 1
+    elif UChoice == "Paper" and CChoice == "rock":
+        showRoundResult("User is Winner")
+        UserScore = UserScore + 1
+    elif UChoice == "Scissor" and CChoice == "rock":
+        showRoundResult("Computer is Winner")
+        CompScore = CompScore + 1
+    elif UChoice == "Paper" and CChoice == "scissor":
+        showRoundResult("Computer is Winner")
+        CompScore = CompScore + 1
+    elif UChoice == "Rock" and CChoice == "paper":
+        showRoundResult("Computer is Winner")
+        CompScore = CompScore + 1
+    elif (UChoice == "Rock" and CChoice == "rock") or (UChoice == "Paper" and CChoice == "paper") or (
+            UChoice == "Scissor" and CChoice == "scissor"):
+        showRoundResult("It's a tie!!!")
+    UScore.config(state="normal", text=UserScore)
+    CScore.config(state="normal", text=CompScore)
+    uInstruct.config(text=" Your Turn!!! Choose from following.....")
+    Rounds = TotalRoundCount.cget('text')
+    if roundCount == Rounds:
+        FinalWinner(UserScore, CompScore)
+
+
+def computerChoice(Uchoice):
+    choices = ['rock', 'paper', 'scissor']
+    choice = random.choice(choices)
+    if choice == "rock":
+        CChoiceB.config(state="normal", image=rock)
+        CompRock.config(state="active")
+    if choice == "paper":
+        CChoiceB.config(state="normal", image=paper)
+        CompPaper.config(state="active")
+    elif choice == "scissor":
+        CChoiceB.config(state="normal", image=scissor)
+        CompScissor.config(state="active")
+
+    RoundWinner(Uchoice, choice)
+
+
+# count score
+
+
+def on_button_click(Uchoice):
+    global roundCount
+    roundCount = RoundCount.cget("text")
+    roundCount += 1
+    uInstruct.config(text="")
+    CompRock.config(state="disabled")
+    CompPaper.config(state="disabled")
+    CompScissor.config(state="disabled")
+    RoundCount.config(state="normal", text=roundCount)
+    if Uchoice == "Rock":
+        UChoiceB.config(state="normal", image=rock)
+    elif Uchoice == "Paper":
+        UChoiceB.config(state="normal", image=paper)
+    elif Uchoice == "Scissor":
+        UChoiceB.config(state="normal", image=scissor)
+
+    computerChoice(Uchoice)
+
+
+if __name__ == "__main__":
+    window = Tk()
+    window.title("Rock-Paper-Scissor Game")
+    window.geometry("850x650+550+250")
+    window.resizable(0, 0)
+
+    # Variable declaration
+    userScore = 0
+    compScore = 0
+    roundCount = 0
+    # foregroundColor1 = "PURPLE"
+    backgroundColor1 = "LIGHTBLUE"
+    # RoundNo = 10
+    foregroundColor2 = "PURPLE"
+    backgroundColor2 = "PINK"
+    foregroundColor3 = "PURPLE"
+    backgroundColor3 = "PINK"
+    rock = ImageTk.PhotoImage(Image.open("Rock.png"))
+    paper = ImageTk.PhotoImage(Image.open("Paper.png"))
+    scissor = ImageTk.PhotoImage(Image.open("Scissor.png"))
+
+    # Frame making
+    frame1 = Frame(window, bg=backgroundColor1)
+    # frame1.pack(side="bottom")
+    frame2 = Frame(window, bg=backgroundColor2)
+    # frame2.pack(side="top", expand=True, fill="both")
+    frame3 = Frame(window, bg=backgroundColor3)
+    # frame3.pack(side="top", expand=True, fill="both")
+
+    start()
+    # ========================================================================
+    #                             Frame 2
+    # ========================================================================
+    # Title of the game
+    Title = Label(
+        frame2,
+        text="ROCK-PAPER-SCISSOR",
+        font=("arial", "25", "bold"),
+        bg=backgroundColor2,
+        foreground="PURPLE",
+    )
+
+    # User Instructions
+    uInstruct = Label(
+        frame2,
+        text=" Your Turn!!! Choose from following.....",
+        font=("arial", "13", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+
+    # User Score Counter
+    UserScoreLabel = Label(
+        frame2,
+        text="User's Score :",
+        font=("arial", "14", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+    UScore = Label(
+        frame2,
+        text=0,
+        font=("arial", "14", "bold"),
+        bg=backgroundColor2,
+        foreground=foregroundColor2
+    )
+
+    # Round Counter
+    RoundCountLabel = Label(
+        frame2,
+        text="Round No. :",
+        font=("arial", "14", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+    TotalRoundCount = Label(
+        frame2,
+        font=("arial", "14", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+    RoundCount = Label(
+        frame2,
+        text=0,
+        font=("arial", "14", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+
+    # Computer Score Counter
+    CompScoreLabel = Label(
+        frame2,
+        text="Computer's Score :",
+        font=("arial", "14", "bold"),
+        foreground=foregroundColor2,
+        bg=backgroundColor2
+    )
+    CScore = Label(
+        frame2,
+        text=0,
+        font=("arial", "14", "bold"),
+        bg=backgroundColor2,
+        foreground=foregroundColor2
+    )
+
+    # User's Option
+    UserRock = Button(
+        frame2,
+        image=rock,
+        width=80,
+        height=80,
+        command=lambda: on_button_click("Rock")
+    )
+    UserPaper = Button(
+        frame2,
+        image=paper,
+        width=80,
+        height=80,
+        command=lambda: on_button_click("Paper")
+    )
+    UserScissor = Button(
+        frame2,
+        image=scissor,
+        width=80,
+        height=80,
+        command=lambda: on_button_click("Scissor")
+    )
+
+    # Choice Label
+    UChoice = Label(
+        frame2,
+        text="User's Choice",
+        font=("arial", "13", "bold"),
+        foreground="MAGENTA",
+        bg=backgroundColor2
+    )
+    CChoice = Label(
+        frame2,
+        text="Computer's Choice",
+        font=("arial", "13", "bold"),
+        foreground="MAGENTA",
+        bg=backgroundColor2
+    )
+
+    # Choice Buttons
+    UChoiceB = Button(
+        frame2,
+        width=80,
+        height=80,
+        image=rock
+    )
+
+    CChoiceB = Button(
+        frame2,
+        width=80,
+        height=80,
+        image=rock
+    )
+
+    # Computer's Option
+    CompRock = Button(
+        frame2,
+        image=rock,
+        width=80,
+        height=80,
+        state="disabled"
+    )
+    CompPaper = Button(
+        frame2,
+        image=paper,
+        width=80,
+        height=80,
+        state="disabled"
+    )
+    CompScissor = Button(
+        frame2,
+        image=scissor,
+        width=80,
+        height=80,
+        state="disabled"
+    )
+
+    # Result
+    WinnerTitle = Label(
+        frame2,
+        text="",
+        font=("arial", "18", "bold"),
+        bg=backgroundColor2,
+        foreground="MAGENTA",
+        state="disabled"
+    )
+    Winner = Label(
+        frame2,
+        text="",
+        font=("arial", "18", "bold"),
+        bg=backgroundColor2,
+        foreground=foregroundColor2,
+    )
+
+    # separator lines
+    line1 = Button(
+        frame2,
+        text="",
+        height=30,
+        bg=foregroundColor2
+    )
+    line1["state"] = DISABLED
+    line2 = Button(
+        frame2,
+        text="",
+        height=30,
+        bg=foregroundColor2
+    )
+    line2["state"] = DISABLED
+
+    # Positioning
+    Title.place(x=210, y=10)
+    uInstruct.place(x=240, y=150)
+    UserScoreLabel.place(x=40, y=150)
+    UScore.place(x=80, y=200)
+    RoundCountLabel.place(x=40, y=300)
+    TotalRoundCount.place(x=160, y=300)
+    RoundCount.place(x=80, y=350)
+    CompScoreLabel.place(x=15, y=470)
+    CScore.place(x=80, y=520)
+    line1.place(x=200, y=150)
+    line2.place(x=580, y=150)
+    UserRock.place(x=250, y=180)
+    UserPaper.place(x=350, y=180)
+    UserScissor.place(x=450, y=180)
+    CompRock.place(x=250, y=500)
+    CompPaper.place(x=350, y=500)
+    CompScissor.place(x=450, y=500)
+    UChoice.place(x=235, y=300)
+    UChoiceB.place(x=250, y=320)
+    CChoice.place(x=420, y=300)
+    CChoiceB.place(x=450, y=320)
+    WinnerTitle.place(x=630, y=300)
+    Winner.place(x=650, y=350)
+
+    window.mainloop()
