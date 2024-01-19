@@ -35,36 +35,45 @@ def addContact():
 def findContact():
     ContactString = contactField.get()
     NoString = NoField.get()
+    flag = 0
     if len(ContactString) == 0 and len(NoString) == 0:
         messagebox.showerror('Error', 'Field is Empty!!!\n Enter the Contact Name or Phone No.')
     else:
         Cursor.execute('SELECT * FROM Contact')
         rows = Cursor.fetchall()
-        if len(ContactString)!=0:
+        if len(ContactString) != 0:
             for contact in rows:
-                if ContactString in Contact:
+                if ContactString in contact:
                     messagebox.showinfo('Contact Information',
-                                            f'Name         :   {contact[1]}\n'
-                                            f'Phone No. :   {contact[2]}\n'
-                                            f'Mail ID       :   {contact[3]}\n'
-                                            f'Address     :   {contact[4]}')
+                                        f'Name         :   {contact[1]}\n'
+                                        f'Phone No. :   {contact[2]}\n'
+                                        f'Mail ID       :   {contact[3]}\n'
+                                        f'Address     :   {contact[4]}')
+                    flag = 1
+                    break
                 else:
-                    messagebox.showinfo('Error', 'contact is not there...')
+                    continue
+            if flag == 0:
+                messagebox.showinfo('Error', 'contact is not there...')
         else:
             for contact in rows:
-                if int(NoString) == contact[2]:
+                if NoString in contact:
                     messagebox.showinfo('Contact Information',
-                                            f'Name         :   {contact[1]}\n'
-                                            f'Phone No. :   {contact[2]}\n'
-                                            f'Mail ID       :   {contact[3]}\n'
-                                            f'Address     :   {contact[4]}')
+                                        f'Name         :   {contact[1]}\n'
+                                        f'Phone No. :   {contact[2]}\n'
+                                        f'Mail ID       :   {contact[3]}\n'
+                                        f'Address     :   {contact[4]}')
+                    flag = 1
+                    break
                 else:
-                    messagebox.showinfo('Error', 'contact is not there...')
+                    continue
+            if flag == 0:
+                messagebox.showinfo('Error', 'contact is not there...')
         clearField()
 
 
 def view():
-    window1=Tk()
+    window1 = Tk()
     table = ttk.Treeview(window1, columns=("sr", "name", "phone", "mail", "add"),
                          show="headings")
 
@@ -89,14 +98,13 @@ def updateList():
 
 
 def removeContact():
-    try:
-        selected = table.selection()
-        if selected:
-            item_id = table.item(selected[0])['values']
-            table.delete(selected[0])
-            Cursor.execute("DELETE FROM Contact WHERE sr=?", (item_id[0],))
-            updateList()
-    except:
+    selected = table.selection()
+    if selected:
+        item_id = table.item(selected[0])['values']
+        table.delete(selected[0])
+        Cursor.execute("DELETE FROM Contact WHERE sr=?", (item_id[0],))
+        updateList()
+    else:
         messagebox.showinfo('Error', 'No contact Selected. Cannot Delete.')
 
 
@@ -110,7 +118,6 @@ def deleteContact():
 
 
 def clearList():
-    # table.delete(0, 'end')
     table.delete(*table.get_children())
 
 
@@ -256,7 +263,7 @@ if __name__ == "__main__":
     )
 
     table = ttk.Treeview(frame, columns=("sr", "name", "phone", "mail", "add"),
-                         show="headings",height=15)
+                         show="headings", height=15)
     # table["columns"] = ("sr", "name", "phone", "mail", "add")
 
     table.heading('sr', text="Sr No")
