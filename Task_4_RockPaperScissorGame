@@ -137,26 +137,13 @@ def showRoundResult(winner):
 def RoundWinner(UChoice, CChoice):
     UserScore = UScore.cget("text")
     CompScore = CScore.cget("text")
-    if UChoice == "Rock" and CChoice == "scissor":
+    if (UChoice == "Rock" and CChoice == "scissor") or (UChoice == "Scissor" and CChoice == "paper") or (UChoice == "Paper" and CChoice == "rock"):
         showRoundResult("User is Winner")
         UserScore = UserScore + 1
-    elif UChoice == "Scissor" and CChoice == "paper":
-        showRoundResult("User is Winner")
-        UserScore = UserScore + 1
-    elif UChoice == "Paper" and CChoice == "rock":
-        showRoundResult("User is Winner")
-        UserScore = UserScore + 1
-    elif UChoice == "Scissor" and CChoice == "rock":
+    elif (UChoice == "Scissor" and CChoice == "rock") or (UChoice == "Paper" and CChoice == "scissor") or (UChoice == "Rock" and CChoice == "paper"):
         showRoundResult("Computer is Winner")
         CompScore = CompScore + 1
-    elif UChoice == "Paper" and CChoice == "scissor":
-        showRoundResult("Computer is Winner")
-        CompScore = CompScore + 1
-    elif UChoice == "Rock" and CChoice == "paper":
-        showRoundResult("Computer is Winner")
-        CompScore = CompScore + 1
-    elif (UChoice == "Rock" and CChoice == "rock") or (UChoice == "Paper" and CChoice == "paper") or (
-            UChoice == "Scissor" and CChoice == "scissor"):
+    elif (UChoice == CChoice):
         showRoundResult("It's a tie!!!")
     UScore.config(state="normal", text=UserScore)
     CScore.config(state="normal", text=CompScore)
@@ -181,8 +168,6 @@ def computerChoice(Uchoice):
 
     RoundWinner(Uchoice, choice)
 
-
-# count score
 
 
 def on_button_click(Uchoice):
